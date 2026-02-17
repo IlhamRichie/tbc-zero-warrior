@@ -1,65 +1,95 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 export default function FloatingParticles() {
   const { scrollY } = useScroll();
-  const [particles, setParticles] = useState<{ id: number; x: number; y: number; size: number; duration: number; delay: number }[]>([]);
+  const [particles, setParticles] = useState<{ 
+    id: number; x: number; y: number; size: number; duration: number; 
+    delay: number; layer: number; type: "circle" | "leaf" 
+  }[]>([]);
 
-  // Generate partikel acak hanya di Client (biar ga error hydration)
+  // Generate partikel hanya di Client
   useEffect(() => {
-    const newParticles = Array.from({ length: 20 }).map((_, i) => ({
+    const newParticles = Array.from({ length: 30 }).map((_, i) => ({
       id: i,
-      x: Math.random() * 100, // Posisi X (0-100%)
-      y: Math.random() * 100, // Posisi Y (0-100%)
-      size: Math.random() * 10 + 2, // Ukuran 2px - 12px
-      duration: Math.random() * 20 + 10, // Durasi animasi melayang
-      delay: Math.random() * 5, // Delay biar ga barengan
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 8 + 4,
+      duration: Math.random() * 15 + 15,
+      delay: Math.random() * 10,
+      layer: i % 3, // 0: Belakang, 1: Tengah, 2: Depan
+      type: i % 4 === 0 ? "leaf" : "circle" as "circle" | "leaf",
     }));
     setParticles(newParticles);
   }, []);
 
-  // Parallax Effect: Scroll cepat -> Partikel gerak cepat
-  // Kita bagi jadi 2 layer biar ada kedalaman (Depth)
-  const y1 = useTransform(scrollY, [0, 5000], [0, -500]); // Layer Belakang (Lambat)
-  const y2 = useTransform(scrollY, [0, 5000], [0, -1000]); // Layer Depan (Cepat)
+  // Smooth out the scroll value for parallax
+  const smoothScrollY = useSpring(scrollY, { stiffness: 50, damping: 20 });
+
+  // 3 Layer Parallax untuk efek 3D yang nyata
+  const yBack = useTransform(smoothScrollY, [0, 5000], [0, -300]);
+  const yMid = useTransform(smoothScrollY, [0, 5000], [0, -700]);
+  const yFront = useTransform(smoothScrollY, [0, 5000], [0, -1200]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {particles.map((p, i) => {
-        // Bagi partikel jadi 2 grup buat efek parallax beda speed
-        const yMove = i % 2 === 0 ? y1 : y2; 
-        
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
+      {particles.map((p) => {
+        // Pilih kecepatan dan blur berdasarkan layer
+        const yMove = p.layer === 0 ? yBack : p.layer === 1 ? yMid : yFront;
+        const blurAmount = p.layer === 0 ? "blur(4px)" : p.layer === 1 ? "blur(1px)" : "blur(0px)";
+        const zIndex = p.layer === 0 ? 0 : p.layer === 1 ? 10 : 20;
+        const opacityBase = p.layer === 0 ? 0.1 : p.layer === 1 ? 0.3 : 0.5;
+
         return (
           <motion.div
             key={p.id}
             style={{ 
               top: `${p.y}%`, 
               left: `${p.x}%`,
-              y: yMove 
+              y: yMove,
+              filter: blurAmount,
+              zIndex: zIndex
             }}
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0 }}
             animate={{ 
-              opacity: [0, 0.4, 0], // Kedap-kedip pelan
-              y: [0, -100], // Gerak ke atas pelan (natural float)
-              x: [0, Math.random() * 50 - 25] // Goyang kiri-kanan
+              opacity: [0, opacityBase, 0],
+              scale: [0.8, 1, 0.8],
+              rotate: p.type === "leaf" ? [0, 45, 0] : 0,
+              x: [0, Math.random() * 80 - 40], // Goyangan horizontal lebih lebar
             }}
             transition={{
               duration: p.duration,
               repeat: Infinity,
               delay: p.delay,
-              ease: "linear"
+              ease: "easeInOut"
             }}
-            className="absolute rounded-full bg-nature-400/30 blur-[1px]"
+            className="absolute flex items-center justify-center"
           >
-            {/* Variasi bentuk: Ada yang bulat, ada yang kayak daun kecil */}
-            <div 
-              style={{ width: p.size, height: p.size }} 
-              className={`rounded-full ${i % 3 === 0 ? 'bg-sun-300/40' : 'bg-nature-400/30'}`} 
-            />
+            {p.type === "leaf" ? (
+              // BENTUK DAUN (Organic Recovery)
+              <div 
+                style={{ width: p.size * 1.5, height: p.size }} 
+                className="bg-nature-400/20 rounded-tl-full rounded-br-full rotate-45 border border-nature-300/10"
+              />
+            ) : (
+              // BENTUK POLLEN (Glowing Spores)
+              <div 
+                style={{ width: p.size, height: p.size }} 
+                className={`rounded-full relative ${
+                  p.id % 3 === 0 ? 'bg-sun-300/30' : 'bg-nature-300/30'
+                }`} 
+              >
+                {/* Efek Glow di dalam partikel */}
+                <div className="absolute inset-0 rounded-full bg-inherit blur-[2px] animate-pulse" />
+              </div>
+            )}
           </motion.div>
         );
       })}
+
+      {/* VIGNETTE EFFECT: Biar partikel seolah-olah hilang di pinggir layar */}
+      <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(255,255,255,0.5)]" />
     </div>
   );
 }
