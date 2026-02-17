@@ -5,9 +5,12 @@ import { Sun, Wind, Bug, Sparkles, Cloud } from "lucide-react";
 
 export default function VentilationSim() {
   const [value, setValue] = useState(0);
+  
+  // FIX: State untuk posisi random (Bakteri & Debu)
   const [bacteriaPositions, setBacteriaPositions] = useState<{ top: number; left: number }[]>([]);
+  const [dustPositions, setDustPositions] = useState<{ top: number; left: number }[]>([]);
 
-  // === LOGIC PHYSICS (Tetap dipertahankan) ===
+  // === LOGIC PHYSICS ===
   const smoothValue = useSpring(0, {
     stiffness: 100,
     damping: 20,
@@ -24,19 +27,29 @@ export default function VentilationSim() {
   // Visual transformations
   const opacitySky = useTransform(smoothValue, [0, 50], [0, 1]);
   const glassOpacity = useTransform(smoothValue, [0, 90], [1, 0.2]);
-  const roomBrightness = useTransform(smoothValue, [0, 100], [0.3, 1]); // Ruangan jadi terang
-  const sunRayOpacity = useTransform(smoothValue, [20, 100], [0, 0.6]); // Berkas cahaya
+  const roomBrightness = useTransform(smoothValue, [0, 100], [0.3, 1]); 
+  const sunRayOpacity = useTransform(smoothValue, [20, 100], [0, 0.6]); 
 
   // Slider visual
   const thumbLeft = useTransform(smoothValue, (v) => `${v}%`);
   const trackWidth = useTransform(smoothValue, (v) => `${v}%`);
-  const trackColor = useTransform(smoothValue, [0, 50, 100], ["#ef4444", "#f59e0b", "#10b981"]); // Merah -> Kuning -> Hijau
+  const trackColor = useTransform(smoothValue, [0, 50, 100], ["#ef4444", "#f59e0b", "#10b981"]); 
 
+  // FIX: Generate posisi random di dalam useEffect (Client-Side Only)
   useEffect(() => {
+    // 1. Generate Posisi Bakteri
     setBacteriaPositions(
       Array.from({ length: 5 }).map(() => ({
         top: 30 + Math.random() * 40,
         left: 20 + Math.random() * 60,
+      }))
+    );
+
+    // 2. Generate Posisi Debu (Inilah penyebab error sebelumnya)
+    setDustPositions(
+      Array.from({ length: 10 }).map(() => ({
+        top: Math.random() * 100,
+        left: Math.random() * 100,
       }))
     );
   }, []);
@@ -51,10 +64,10 @@ export default function VentilationSim() {
         <motion.div
           className="relative w-full md:w-1/2 h-[500px] flex items-center justify-center overflow-hidden"
           style={{ 
-            backgroundColor: "#0f172a", // Base color gelap
+            backgroundColor: "#0f172a", 
           }}
         >
-          {/* 1. LAYER LANGIT (Muncul pas dibuka) */}
+          {/* 1. LAYER LANGIT */}
           <motion.div
             className="absolute inset-0 bg-sky-300 z-0"
             style={{ opacity: opacitySky }}
@@ -63,13 +76,13 @@ export default function VentilationSim() {
              <Cloud className="absolute top-20 right-20 text-white/30 w-12 h-12" />
           </motion.div>
           
-          {/* 2. LAYER DINDING DALAM (Terang/Gelap ikut slider) */}
+          {/* 2. LAYER DINDING DALAM */}
           <motion.div 
              className="absolute inset-0 bg-nature-100 z-0 pointer-events-none mix-blend-overlay"
              style={{ opacity: roomBrightness }}
           />
 
-          {/* 3. GOD RAYS (Berkas Cahaya Masuk) */}
+          {/* 3. GOD RAYS */}
           <motion.div 
             style={{ opacity: sunRayOpacity, rotate: -20 }}
             className="absolute top-0 right-0 w-[200%] h-full bg-gradient-to-l from-white/40 to-transparent pointer-events-none z-10 blur-xl transform origin-top-right"
@@ -78,7 +91,7 @@ export default function VentilationSim() {
           {/* === JENDELA UTAMA === */}
           <div className="relative z-20 w-72 h-96 bg-stone-800 border-[16px] border-stone-700 rounded-t-[120px] shadow-2xl overflow-hidden">
             
-            {/* Pemandangan Luar (Matahari) */}
+            {/* Pemandangan Luar */}
             <div className="absolute inset-0 bg-sky-400 overflow-hidden">
               <motion.div
                 style={{ opacity: opacitySky, scale: opacitySky }}
@@ -88,22 +101,19 @@ export default function VentilationSim() {
               </motion.div>
             </div>
 
-            {/* KACA JENDELA (Sliding Part) */}
+            {/* KACA JENDELA */}
             <motion.div
               className="absolute inset-0 bg-slate-700/80 backdrop-blur-[4px] border-b-[16px] border-slate-600 flex flex-col justify-end"
               style={{ y: yMove, opacity: glassOpacity }}
             >
               <div className="w-full h-full relative overflow-hidden">
-                {/* Refleksi Kaca */}
                 <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/10 to-transparent" />
                 <div className="absolute top-10 right-10 w-2 h-32 bg-white/20 rotate-12 rounded-full blur-[1px]" />
-                
-                {/* Handle Jendela */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-4 bg-slate-400 rounded-full shadow-lg border border-slate-300" />
               </div>
             </motion.div>
 
-            {/* Tralis Jendela (Tetap) */}
+            {/* Tralis Jendela */}
             <div className="absolute inset-0 pointer-events-none z-30 opacity-40">
               <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-stone-900" />
               <div className="absolute top-1/3 left-0 right-0 h-[2px] bg-stone-900" />
@@ -112,15 +122,18 @@ export default function VentilationSim() {
 
           {/* === PARTIKEL & BAKTERI === */}
           
-          {/* Partikel Debu (Muncul pas gelap) */}
+          {/* FIX: Partikel Debu (Render dari State) */}
           <motion.div style={{ opacity: useTransform(smoothValue, [0, 50], [1, 0]) }} className="absolute inset-0 pointer-events-none">
-             {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" 
-                     style={{ top: `${Math.random()*100}%`, left: `${Math.random()*100}%` }} />
+             {dustPositions.map((pos, i) => (
+                <div 
+                    key={i} 
+                    className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" 
+                    style={{ top: `${pos.top}%`, left: `${pos.left}%` }} 
+                />
              ))}
           </motion.div>
 
-          {/* Partikel Angin Segar (Muncul pas terang) */}
+          {/* Partikel Angin Segar */}
           <motion.div style={{ opacity: useTransform(smoothValue, [60, 100], [0, 1]) }} className="absolute inset-0 pointer-events-none z-30">
              <Wind className="absolute top-1/4 left-10 text-white/30 w-12 h-12 animate-pulse" />
              <Wind className="absolute bottom-1/4 right-10 text-white/30 w-8 h-8 animate-pulse delay-700" />
@@ -136,7 +149,7 @@ export default function VentilationSim() {
                 animate={{
                   opacity: i < bacteriaCount ? 1 : 0,
                   scale: i < bacteriaCount ? 1 : 0,
-                  y: [0, -15, 0], // Floating effect
+                  y: [0, -15, 0], 
                   x: [0, 5, 0],
                 }}
                 transition={{ 
@@ -148,7 +161,6 @@ export default function VentilationSim() {
               >
                 <div className="relative">
                    <Bug size={28} className="text-tbc-danger drop-shadow-md" strokeWidth={2.5} />
-                   {/* Aura Kuman */}
                    <div className="absolute inset-0 bg-red-500/30 blur-md rounded-full -z-10 animate-pulse" />
                 </div>
               </motion.div>
@@ -159,7 +171,6 @@ export default function VentilationSim() {
 
         {/* === CONTROLLER === */}
         <div className="w-full md:w-1/2 p-12 flex flex-col justify-center bg-white z-40 relative">
-          {/* Background Pattern halus */}
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 pointer-events-none" />
 
           <div className="relative z-10">
@@ -189,9 +200,7 @@ export default function VentilationSim() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-50"
               />
 
-              {/* Track Background */}
               <div className="absolute w-full h-6 bg-nature-50 rounded-full overflow-hidden border border-nature-200 pointer-events-none shadow-inner">
-                {/* Dynamic Colored Track */}
                 <motion.div
                   className="absolute top-0 bottom-0 left-0"
                   style={{ 
@@ -201,7 +210,6 @@ export default function VentilationSim() {
                 />
               </div>
 
-              {/* Thumb (Matahari) */}
               <motion.div
                 className="absolute h-14 w-14 bg-white border-[3px] rounded-full shadow-[0_4px_14px_rgba(0,0,0,0.1)] flex items-center justify-center pointer-events-none z-20"
                 style={{
@@ -210,7 +218,6 @@ export default function VentilationSim() {
                   borderColor: trackColor
                 }}
               >
-                {/* Icon berubah sesuai progress */}
                 {value > 50 ? (
                     <Sun className="text-sun-400 fill-sun-400" size={24} />
                 ) : (
