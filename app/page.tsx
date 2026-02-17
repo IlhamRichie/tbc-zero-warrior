@@ -17,16 +17,35 @@ export default function Home() {
       <Preloader />
       <FloatingParticles /> 
       <A11ySettings />
-
       <Navbar />
-      <HeroBreathe />
+      
+      {/* Beranda / Hero */}
+      <section id="beranda">
+        <HeroBreathe />
+      </section>
 
-      <FloralLungs /> {/* Visualisasi artistik setelah Hero */}
-      <VentilationSim />
-      <SymptomSwiper /> 
-      <LungScanner />
+      {/* Simulasi / Tentang */}
+      <section id="tentang">
+        <FloralLungs />
+        <VentilationSim />
+      </section>
+
+      {/* Cek Gejala */}
+      <section id="cek-gejala">
+        <SymptomSwiper /> 
+      </section>
+      
+      {/* Scanner */}
+      <section id="scanner">
+        <LungScanner />
+      </section>
+      
       <BentoGrid />
-      <HealingJourney />
+
+      {/* Roadmap */}
+      <section id="roadmap">
+        <HealingJourney />
+      </section>
       
       <Footer />
     </main>

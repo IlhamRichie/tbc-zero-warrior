@@ -18,6 +18,13 @@ export default function Navbar() {
     else setScrolled(false);
   });
 
+  const menuItems = [
+    { name: 'Beranda', href: '#beranda' },
+    { name: 'Cek Gejala', href: '#cek-gejala' },
+    { name: 'Simulasi', href: '#tentang' },
+    { name: 'Roadmap Sembuh', href: '#roadmap' },
+  ];
+
   return (
     <>
       <motion.nav 
