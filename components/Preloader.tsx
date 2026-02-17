@@ -49,7 +49,7 @@ export default function Preloader() {
               transition={{ delay: 1 }}
               className="mt-2 text-nature-100/60 font-mono text-sm"
             >
-              Bersiap untuk pulih...
+              Bernafaslah sejenak...
             </motion.p>
           </div>
         </motion.div>
