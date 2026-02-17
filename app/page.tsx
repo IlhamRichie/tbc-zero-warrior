@@ -5,20 +5,22 @@ import HeroBreathe from "@/components/HeroBreathe";
 import SymptomSwiper from "@/components/SymptomSwiper";
 import LungScanner from "@/components/LungScanner";
 import VentilationSim from "@/components/VentilationSim";
-import FloralLungs from "@/components/FloralLungs"; // <-- Baru
+import FloralLungs from "@/components/FloralLungs";
 import BentoGrid from "@/components/BentoGrid";
 import HealingJourney from "@/components/HealingJourney";
-import A11ySettings from "@/components/A11ySettings"; // <-- Baru
+import A11ySettings from "@/components/A11ySettings";
+import NearbyCareMap from "@/components/NearbyCareMap";
+import NutritionCheck from "@/components/NutritionCheck"; // ✅ Import Baru
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <main className="min-h-screen font-sans selection:bg-nature-400 selection:text-white bg-nature-50">
       <Preloader />
-      <FloatingParticles /> 
+      <FloatingParticles />
       <A11ySettings />
       <Navbar />
-      
+
       {/* Beranda / Hero */}
       <section id="beranda">
         <HeroBreathe />
@@ -32,21 +34,34 @@ export default function Home() {
 
       {/* Cek Gejala */}
       <section id="cek-gejala">
-        <SymptomSwiper /> 
+        <SymptomSwiper />
       </section>
-      
+
       {/* Scanner */}
       <section id="scanner">
         <LungScanner />
       </section>
-      
-      <BentoGrid />
+
+      {/* Dashboard Harapan (Bento) */}
+      <section id="dashboard">
+        <BentoGrid />
+      </section>
+
+      {/* ✅ Cek Gizi / Nutrisi */}
+      <section id="nutrisi">
+        <NutritionCheck />
+      </section>
+
+      {/* Nearby Care Map */}
+      <section id="nearby-care">
+        <NearbyCareMap />
+      </section>
 
       {/* Roadmap */}
       <section id="roadmap">
         <HealingJourney />
       </section>
-      
+
       <Footer />
     </main>
   );
