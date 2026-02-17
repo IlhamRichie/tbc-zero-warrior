@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RESPIRE: TBC Zero Warrior
 
-## Getting Started
+## Institusi
+Universitas Harkat Negeri
 
-First, run the development server:
+## Anggota Tim
+- Ketua: Angga Sukha Pratama
+- Anggota 1: M. Ilham Rigan Agachi
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏥 Tentang Proyek (Project Overview)
+**RESPIRE** adalah platform edukasi kesehatan interaktif yang didedikasikan untuk meningkatkan kesadaran masyarakat tentang **Tuberculosis (TBC)** di Indonesia.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Website ini dirancang untuk menjawab tantangan minimnya literasi TBC dengan pendekatan **"Clean-Tech Aesthetics"** yang menenangkan namun informatif. Tidak hanya sekadar menampilkan teks, RESPIRE mengajak pengguna merasakan pengalaman visual (scrollytelling) tentang perjalanan pasien TBC dari diagnosa hingga sembuh total, menghapus stigma, dan mendorong deteksi dini.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🌟 Fitur Unggulan (Key Features)
+* **The 6-Month Journey (Horizontal Scroll):** Visualisasi interaktif timeline pengobatan TBC agar pasien patuh minum obat.
+* **Glassmorphism UI:** Desain antarmuka modern yang bersih, transparan, dan memberikan kesan "harapan" (Hope).
+* **Interactive Risk Checker:** Fitur deteksi mandiri resiko TBC dengan animasi kartu interaktif.
+* **Motion-First Experience:** Transisi halaman dan elemen visual yang halus menggunakan Framer Motion untuk menjaga atensi pengguna.
+* **Fully Responsive:** Tampilan optimal di Smartphone (Mobile First) dan Desktop.
 
-## Learn More
+## 🛠️ Teknologi yang Digunakan (Tech Stack)
+Proyek ini dibangun menggunakan teknologi web modern untuk memastikan performa tinggi dan pengalaman pengguna yang maksimal:
 
-To learn more about Next.js, take a look at the following resources:
+* **Framework:** [Next.js 14/15 (App Router)](https://nextjs.org/)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **Animation:** [Framer Motion](https://www.framer.com/motion/)
+* **Icons:** [Lucide React](https://lucide.dev/)
+* **Deployment:** [Vercel](https://vercel.com/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Cara Instalasi & Menjalankan (Installation)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Pastikan Anda telah menginstal **Node.js** sebelum memulai.
 
-## Deploy on Vercel
+1.  **Clone Repository**
+    ```bash
+    git clone [https://github.com/username-kamu/tbc-zero-warrior.git](https://github.com/username-kamu/tbc-zero-warrior.git)
+    cd tbc-zero-warrior
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3.  **Jalankan Development Server**
+    ```bash
+    npm run dev
+    ```
+
+4.  **Buka di Browser**
+    Buka [http://localhost:3000](http://localhost:3000) untuk melihat hasil.
+
+## 🔗 Link Demo (Live Preview)
+Akses website yang sudah di-deploy di sini:
+**[Masukan Link Vercel/Netlify Kamu Disini Nanti]**
+
+---
+*Dibuat untuk kompetisi SOFTCOMPT TECHSOFT 2026 - Kategori Web Design.*
