@@ -1,20 +1,30 @@
-import Navbar from "@/components/Navbar"; // Navbar yg tadi tetep dipake
+import Navbar from "@/components/Navbar";
 import HeroBreathe from "@/components/HeroBreathe";
+import SymptomSwiper from "@/components/SymptomSwiper"; // <-- FITUR BARU
+import LungScanner from "@/components/LungScanner";
 import BentoGrid from "@/components/BentoGrid";
+import HealingJourney from "@/components/HealingJourney";
 
 export default function Home() {
   return (
     <main className="min-h-screen font-sans selection:bg-nature-400 selection:text-white">
-      <Navbar /> {/* Nanti update warna navbar manual ya biar match */}
+      <Navbar />
       
       <HeroBreathe />
+
+      {/* Bagian Interaktif didahulukan biar user langsung main */}
+      <SymptomSwiper /> 
+      
+      <LungScanner />
       
       <BentoGrid />
       
-      {/* Tambahan Space biar bisa scroll */}
-      <div className="h-[200px] text-center pt-20 text-nature-900/40 text-sm">
-        <p>Design for Techsoft 2026 • Organic Recovery Concept</p>
-      </div>
+      <HealingJourney />
+      
+      {/* Footer Simple */}
+      <footer className="py-12 bg-nature-900 text-center text-nature-100/50">
+        <p className="font-mono text-sm">Dibuat dengan ❤️ untuk Indonesia Bebas TBC</p>
+      </footer>
     </main>
   );
 }
